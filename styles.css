@@ -1,0 +1,83 @@
+/* styles.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    overflow: hidden;
+    background-color: #f4f4fe;
+}
+
+#map-container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.btn-group-vertical {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+
+}
+
+.btn-group-bottom {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    
+}
+
+#zoom-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#zoom-controls button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+:root {
+    --icon-fill-color: #000; /* Cor de preenchimento padrão */
+}
+
+
+svg path {
+    stroke: #eee;
+    stroke-width: .25;
+}
+
+svg path:hover {
+    fill: #ddd;
+    transition: 0.6s;
+    cursor: pointer;
+}
+
+.map_tooltip {
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -100%);
+    opacity: 80%;
+}
+/* 
+opacity: 0;
+    width: max-content;
+    position: absolute;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    color: var(--text-primary);
+    background-color: var(--alert-bg);
+    border-radius: 5px;
+    padding: 7px; */
