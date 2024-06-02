@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const countryElements = document.querySelectorAll(`[id="${country}"]`);
             countryElements.forEach(countryElement => {
                 if (countryElement) {
-                    countryElement.style.fill = '#9790ee'
+                    countryElement.style.fill = '#ffb0ee';
                 }
             });
         });
@@ -209,8 +209,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const buttonZoomIn = document.getElementById('zoom-in');
         const buttonZoomOut = document.getElementById('zoom-out');
         const buttonReset = document.getElementById('reset-button');
-        const svgElements = document.querySelectorAll('#map-container svg path');
-
 
         if (currentTheme === 'dark') {
             lightIcon.style.display = 'none';

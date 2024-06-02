@@ -78,16 +78,55 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Como Jogar</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Como jogar</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li>Observe o mapa e clique em um país que você acha que é o correto.</li>
-                        <li>O país clicado mudará de cor de acordo com a sua resposta.</li>
+                        <li>Observe o mapa e clique no país que você acredita que fará parte dos BRICS.</li>
+                        <li>O país clicado mudará de cor conforme sua resposta.</li>
+                        <li>As cores seguem uma escala de calor: quanto mais <strong
+                                style="color: red;">VERMELHO</strong>, mais próximo, e quanto mais <strong
+                                style="color: blue;">AZUL</strong>,
+                            mais distante.</li>
                         <li>Use os botões de zoom para aproximar ou afastar o mapa.</li>
                         <li>Use o botão de reset para reiniciar o mapa.</li>
                     </ul>
+                    <hr>
+                    <p class="fs-5">Como funciona a pontuação?</p>
+                    <ul>
+                        <li> Para cada país correto, você acumula 20 pontos. </li>
+                        <li> Caso marque o país incorreto, serão descontados 5 pontos. </li>
+                    </ul>
+                    <hr>
+                    <p class="fs-5">Escala de cor</p>
+
+                    <div class="escalaDeCor">
+                        <div class="color-box"
+                            style="background-color: #F06868; height: 20px; width: 20px; margin: 5px; margin-right: 20px;"></div>
+                        <p>Acertou!</p>
+                    </div>
+                    <div class="escalaDeCor">
+                        <div class="color-box"
+                            style="background-color: #FF9C6D; height: 20px; width: 20px; margin: 5px; margin-right: 20px;"></div>
+                        <p>Quente</p>
+                    </div>
+                    <div class="escalaDeCor">
+                        <div class="color-box"
+                            style="background-color: #EDF798; height: 20px; width: 20px; margin: 5px; margin-right: 20px;"></div>
+                        <p>Morno</p>
+                    </div>
+                    <div class="escalaDeCor">
+                        <div class="color-box"
+                            style="background-color: #80D6FF; height: 20px; width: 20px; margin: 5px; margin-right: 20px;"></div>
+                        <p>Frio</p>
+                    </div>
+                    <div class="escalaDeCor">
+                        <div class="color-box"
+                            style="background-color: #00215E; height: 20px; width: 20px; margin: 5px; margin-right: 20px;"></div>
+                        <p>Errou!</p>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

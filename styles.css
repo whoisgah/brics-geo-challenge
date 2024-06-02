@@ -25,6 +25,11 @@ body,
     right: 20px;
 }
 
+.escalaDeCor{
+    display: flex;
+    flex-direction: initial;
+}
+
 .score-container {
     position: fixed;
     top: 20px;
