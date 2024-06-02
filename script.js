@@ -32,40 +32,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function onCountryClick(event) {
         const selectedCountry = event.target.id; // ou event.target.getAttribute('id');
-
+    
         // Verifica se o país já foi clicado antes
         if (!clickedCountries.includes(selectedCountry)) {
             // Adiciona o país à lista de países clicados
             clickedCountries.push(selectedCountry);
-
+    
             // Buscar todos os países com o mesmo nome
             const sameNameCountries = document.querySelectorAll(`[id="${selectedCountry}"]`);
-            // Pintar todos os países com o mesmo nome
+    
+            // Variável para armazenar o valor de incremento/decremento
+            let incrementValue = 0;
+            let fillColor = '';
+    
+            // Definir o valor de incremento/decremento e a cor do preenchimento
+            if (correctCountries.includes(selectedCountry)) {
+                incrementValue = 20;
+                fillColor = '#F06868';
+            } else if (orangeCountries.includes(selectedCountry)) {
+                incrementValue = -5;
+                fillColor = '#FF9C6D';
+            } else if (yellowCountries.includes(selectedCountry)) {
+                incrementValue = -5;
+                fillColor = '#EDF798';
+            } else if (blueCountries.includes(selectedCountry)) {
+                incrementValue = -5;
+                fillColor = '#80D6FF';
+            } else if (darkBlueCountries.includes(selectedCountry)) {
+                incrementValue = -5;
+                fillColor = '#00215E';
+            }
+    
+            // Aplicar a cor de preenchimento a todos os elementos SVG do país selecionado
             sameNameCountries.forEach(country => {
-                if (correctCountries.includes(selectedCountry)) {
-                    incrementScore(20);
-                    country.style.fill = '#F06868';
-                } else if (orangeCountries.includes(selectedCountry)) {
-                    incrementScore(-5);
-                    country.style.fill = '#FF9C6D';
-                } else if (yellowCountries.includes(selectedCountry)) {
-                    incrementScore(-5);
-                    country.style.fill = '#EDF798';
-                } else if (blueCountries.includes(selectedCountry)) {
-                    incrementScore(-5);
-                    country.style.fill = '#80D6FF';
-                } else if (darkBlueCountries.includes(selectedCountry)) {
-                    incrementScore(-5);
-                    country.style.fill = '#00215E';
-                }
+                country.style.fill = fillColor;
             });
+    
+            // Incrementar a pontuação uma única vez por país clicado
+            incrementScore(incrementValue);
         }
     }
-
+    
     let score = 0;
     let scoredCountries = 0;
     let errorCountries = 0;
-    function incrementScore(int, country) {
+    
+    function incrementScore(int) {
         score += int;
         if (int > 0) {
             scoredCountries += 1;
@@ -76,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('errorCountries').textContent = errorCountries.toString();
         document.getElementById('score').textContent = score.toString();
     }
+    
 
     function resetMap() {
         console.log('resetMap');
@@ -129,31 +142,21 @@ document.addEventListener('DOMContentLoaded', function () {
         let viewBox = svgElement.getAttribute('viewBox').split(' ').map(Number);
         svgElement.setAttribute('data-initial-viewBox', viewBox.join(' '));
         const zoomFactor = 1.2;
+    
         svgElement.addEventListener('wheel', function (event) {
             event.preventDefault();
-            const { offsetX, offsetY, deltaY } = event;
-            const zoom = deltaY > 0 ? zoomFactor : 1 / zoomFactor;
-            const [minX, minY, width, height] = viewBox;
-            const mouseX = offsetX / svgElement.clientWidth * width + minX;
-            const mouseY = offsetY / svgElement.clientHeight * height + minY
-            viewBox = [
-                mouseX - (mouseX - minX) * zoom,
-                mouseY - (mouseY - minY) * zoom,
-                width * zoom,
-                height * zoom
-            ];
-            svgElement.setAttribute('viewBox', viewBox.join(' '));
+            zoom(event.offsetX, event.offsetY, event.deltaY > 0 ? zoomFactor : 1 / zoomFactor);
         });
-
+    
         let isPanning = false;
         let startX, startY;
-
+    
         svgElement.addEventListener('mousedown', function (event) {
             isPanning = true;
             startX = event.clientX;
             startY = event.clientY;
         });
-
+    
         svgElement.addEventListener('mousemove', function (event) {
             if (!isPanning) return;
             const dx = (startX - event.clientX) * (viewBox[2] / svgElement.clientWidth);
@@ -164,40 +167,88 @@ document.addEventListener('DOMContentLoaded', function () {
             startY = event.clientY;
             svgElement.setAttribute('viewBox', viewBox.join(' '));
         });
-
+    
         svgElement.addEventListener('mouseup', function () {
             isPanning = false;
         });
-
+    
         svgElement.addEventListener('mouseleave', function () {
             isPanning = false;
         });
-
+    
+        svgElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+        svgElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+        svgElement.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
         document.getElementById('zoom-in').addEventListener('click', function () {
-            zoom(svgElement, 1 / zoomFactor);
+            zoom(svgElement.clientWidth / 2, svgElement.clientHeight / 2, 1 / zoomFactor);
         });
-
-
+    
         document.getElementById('zoom-out').addEventListener('click', function () {
-            zoom(svgElement, zoomFactor);
+            zoom(svgElement.clientWidth / 2, svgElement.clientHeight / 2, zoomFactor);
         });
-
-        function zoom(svgElement, zoomFactor) {
+    
+        function zoom(x, y, factor) {
             const [minX, minY, width, height] = viewBox;
-
-            const centerX = minX + width / 2;
-            const centerY = minY + height / 2;
-
+            const mouseX = x / svgElement.clientWidth * width + minX;
+            const mouseY = y / svgElement.clientHeight * height + minY;
+    
             viewBox = [
-                centerX - (centerX - minX) * zoomFactor,
-                centerY - (centerY - minY) * zoomFactor,
-                width * zoomFactor,
-                height * zoomFactor
+                mouseX - (mouseX - minX) * factor,
+                mouseY - (mouseY - minY) * factor,
+                width * factor,
+                height * factor
             ];
             svgElement.setAttribute('viewBox', viewBox.join(' '));
         }
+    
+        let lastTouchDistance = null;
+    
+        function handleTouchStart(event) {
+            if (event.touches.length === 2) {
+                lastTouchDistance = getDistance(event.touches[0], event.touches[1]);
+                isPanning = false;
+            } else if (event.touches.length === 1) {
+                isPanning = true;
+                startX = event.touches[0].clientX;
+                startY = event.touches[0].clientY;
+            }
+        }
+    
+        function handleTouchMove(event) {
+            event.preventDefault();
+            if (event.touches.length === 2) {
+                const currentTouchDistance = getDistance(event.touches[0], event.touches[1]);
+                const zoomFactor = lastTouchDistance / currentTouchDistance;
+                const centerX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
+                const centerY = (event.touches[0].clientY + event.touches[1].clientY) / 2;
+                zoom(centerX, centerY, zoomFactor);
+                lastTouchDistance = currentTouchDistance;
+            } else if (isPanning && event.touches.length === 1) {
+                const dx = (startX - event.touches[0].clientX) * (viewBox[2] / svgElement.clientWidth);
+                const dy = (startY - event.touches[0].clientY) * (viewBox[3] / svgElement.clientHeight);
+                viewBox[0] += dx;
+                viewBox[1] += dy;
+                startX = event.touches[0].clientX;
+                startY = event.touches[0].clientY;
+                svgElement.setAttribute('viewBox', viewBox.join(' '));
+            }
+        }
+    
+        function handleTouchEnd(event) {
+            if (event.touches.length < 2) {
+                lastTouchDistance = null;
+            }
+            if (event.touches.length === 0) {
+                isPanning = false;
+            }
+        }
+    
+        function getDistance(touch1, touch2) {
+            return Math.sqrt(Math.pow(touch2.clientX - touch1.clientX, 2) + Math.pow(touch2.clientY - touch1.clientY, 2));
+        }
     }
-
+    
     let currentTheme = 'dark'; // Tema inicial
 
     // Função para alternar entre os temas
