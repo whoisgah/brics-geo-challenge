@@ -84,11 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const countryElements = document.querySelectorAll(`[id="${country}"]`);
             countryElements.forEach(countryElement => {
                 if (countryElement) {
-                    if (currentTheme == 'dark') {
-                        countryElement.style.fill = '#ffb0ee';
-                    } else if (currentTheme == 'light') {
-                        countryElement.style.fill = '#9790ee';
-                    }
+                    countryElement.style.fill = '#9790ee'
                 }
             });
         });
