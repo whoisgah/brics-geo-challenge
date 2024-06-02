@@ -93,6 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
         // Resetar o viewBox para o valor inicial
+        score = 0;
+        scoredCountries = 0;
+        errorCountries = 0;
+        document.getElementById('scoredCountries').textContent = scoredCountries.toString();
+        document.getElementById('errorCountries').textContent = errorCountries.toString();
+        document.getElementById('score').textContent = score.toString();
+        clickedCountries = [];
         const svgElement = document.querySelector('#map-container svg');
         const initialViewBox = svgElement.getAttribute('data-initial-viewBox');
         svgElement.setAttribute('viewBox', initialViewBox);
