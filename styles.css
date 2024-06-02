@@ -13,44 +13,46 @@ body {
     position: relative;
 }
 
+body,
+.modal-content,
+.btn .svg {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
 .btn-group-vertical {
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 1000;
-
 }
+
+.score-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(167, 167, 167, 0.2);
+    }
 
 .btn-group-bottom {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 1000;
-    
-}
-
-#zoom-controls {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
     flex-direction: column;
-}
-
-#zoom-controls button {
-    margin: 5px;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
+    align-items: flex-start;
+    justify-content: center;
+    display: inline-flex;
+    vertical-align: middle;
 }
 
 :root {
-    --icon-fill-color: #000; /* Cor de preenchimento padrão */
+    --icon-fill-color: #000;
+    /* Cor de preenchimento padrão */
 }
 
 
 svg path {
-    stroke: #eee;
+    stroke: #000000;
     stroke-width: .25;
 }
 
@@ -71,13 +73,3 @@ svg path:hover {
     transform: translate(-50%, -100%);
     opacity: 80%;
 }
-/* 
-opacity: 0;
-    width: max-content;
-    position: absolute;
-    transform: translate(-50%, -100%);
-    pointer-events: none;
-    color: var(--text-primary);
-    background-color: var(--alert-bg);
-    border-radius: 5px;
-    padding: 7px; */
