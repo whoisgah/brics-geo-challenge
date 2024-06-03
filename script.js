@@ -11,9 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
             const myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
             myModal.show();
+            resetMap();
         });
 
-    const countries = ["AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ", "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LR", "LS", "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE", "RW", "SC", "SD", "SH", "SL", "SN", "SO", "SS", "ST", "SZ", "TD", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM", "ZW", "AF", "AM", "AZ", "BH", "CY", "GE", "IQ", "IR", "IL", "JO", "KW", "LB", "OM", "PS", "QA", "SA", "SY", "TR", "AE", "YE"];
+    const countries = ["AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ", "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LR", "LS", "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE", "RW", "SC", "SD", "SH", "SL", "SN", "SO", "SS", "ST", "SZ", "TD", "TG", "TN", "TZ", "UG", "YT", "ZA", "ZM", "ZW", "AZ", "BH", "CY", "IQ", "IR", "IL", "JO", "KW", "LB", "OM", "PS", "QA", "SA", "SY", "TR", "AE", "YE"];
     const orangeCountries = ["DJ", "ER", "IQ", "JO", "KE", "LY", "OM", "QA", "SD", "SO", "SS", "SY", "TR", "YE", "BH", "KW", "IL"];
     const yellowCountries = ["SC", "KM", "BI", "CF", "CD", "CY", "DZ", "LB", "NE", "OS", "RW", "SY", "TD", "TN", "TR", "TZ", "UG", "PS"];
     const blueCountries = ["AO", "BF", "BJ", "CM", "CG", "EH", "MA", "MG", "ML", "MR", "MZ", "MW", "NG", "ZM"];
@@ -32,19 +33,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function onCountryClick(event) {
         const selectedCountry = event.target.id; // ou event.target.getAttribute('id');
-    
+
         // Verifica se o país já foi clicado antes
         if (!clickedCountries.includes(selectedCountry)) {
             // Adiciona o país à lista de países clicados
             clickedCountries.push(selectedCountry);
-    
+
             // Buscar todos os países com o mesmo nome
             const sameNameCountries = document.querySelectorAll(`[id="${selectedCountry}"]`);
-    
+
             // Variável para armazenar o valor de incremento/decremento
             let incrementValue = 0;
             let fillColor = '';
-    
+
             // Definir o valor de incremento/decremento e a cor do preenchimento
             if (correctCountries.includes(selectedCountry)) {
                 incrementValue = 20;
@@ -62,21 +63,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 incrementValue = -5;
                 fillColor = '#00215E';
             }
-    
+
             // Aplicar a cor de preenchimento a todos os elementos SVG do país selecionado
             sameNameCountries.forEach(country => {
                 country.style.fill = fillColor;
             });
-    
+
             // Incrementar a pontuação uma única vez por país clicado
             incrementScore(incrementValue);
         }
     }
-    
+
     let score = 0;
     let scoredCountries = 0;
     let errorCountries = 0;
-    
+
     function incrementScore(int) {
         score += int;
         if (int > 0) {
@@ -88,10 +89,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('errorCountries').textContent = errorCountries.toString();
         document.getElementById('score').textContent = score.toString();
     }
-    
+
 
     function resetMap() {
-        console.log('resetMap');
         // Resetar as cores dos países para a cor padrão
         countries.forEach(country => {
             const countryElements = document.querySelectorAll(`[id="${country}"]`);
@@ -116,47 +116,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function showCountryName(event) {
-        const countryName = event.target.getAttribute('name');
-        const map_tooltip = document.createElement('div');
-        map_tooltip.textContent = countryName;
-        map_tooltip.classList.add('map_tooltip');
-        document.body.appendChild(map_tooltip);
-        function moveTooltip(e) {
-            map_tooltip.style.top = `${e.clientY - 5}px`; // Adicionando um offset para melhor visibilidade
-            map_tooltip.style.left = `${e.clientX}px`;
+        const countryCode = event.target.getAttribute('id');
+        if (countries.includes(countryCode)) {
+            const countryName = event.target.getAttribute('name');
+            const map_tooltip = document.createElement('div');
+            map_tooltip.textContent = countryName;
+            map_tooltip.classList.add('map_tooltip');
+            document.body.appendChild(map_tooltip);
+
+            function moveTooltip(e) {
+                map_tooltip.style.top = `${e.clientY - 5}px`; // Adicionando um offset para melhor visibilidade
+                map_tooltip.style.left = `${e.clientX}px`;
+            }
+
+            function removeTooltip() {
+                map_tooltip.remove();
+                event.target.removeEventListener('mousemove', moveTooltip);
+                event.target.removeEventListener('mouseout', removeTooltip);
+            }
+
+            event.target.addEventListener('mousemove', moveTooltip);
+            event.target.addEventListener('mouseout', removeTooltip, { once: true });
+
+            // Posicionar a tooltip inicialmente
+            moveTooltip(event);
         }
-        function removeTooltip() {
-            map_tooltip.remove();
-            event.target.removeEventListener('mousemove', moveTooltip);
-            event.target.removeEventListener('mouseout', removeTooltip);
-        }
-        event.target.addEventListener('mousemove', moveTooltip);
-        event.target.addEventListener('mouseout', removeTooltip, { once: true });
-        // Posicionar a tooltip inicialmente
-        moveTooltip(event);
     }
 
 
     function setupZoomAndPan() {
         const svgElement = document.querySelector('#map-container svg');
         let viewBox = svgElement.getAttribute('viewBox').split(' ').map(Number);
-        svgElement.setAttribute('data-initial-viewBox', viewBox.join(' '));
+        const initialViewBox = viewBox.slice();
         const zoomFactor = 1.2;
-    
+        const minZoomWidth = initialViewBox[2] * 0.3;
+        const minZoomHeight = initialViewBox[3] * 0.3;
+        const maxZoomWidth = initialViewBox[2] * 2;
+        const maxZoomHeight = initialViewBox[3] * 2;
+
+
+        svgElement.setAttribute('data-initial-viewBox', viewBox.join(' '));
+
         svgElement.addEventListener('wheel', function (event) {
             event.preventDefault();
             zoom(event.offsetX, event.offsetY, event.deltaY > 0 ? zoomFactor : 1 / zoomFactor);
         });
-    
+
         let isPanning = false;
         let startX, startY;
-    
+
         svgElement.addEventListener('mousedown', function (event) {
             isPanning = true;
             startX = event.clientX;
             startY = event.clientY;
         });
-    
+
         svgElement.addEventListener('mousemove', function (event) {
             if (!isPanning) return;
             const dx = (startX - event.clientX) * (viewBox[2] / svgElement.clientWidth);
@@ -167,43 +181,49 @@ document.addEventListener('DOMContentLoaded', function () {
             startY = event.clientY;
             svgElement.setAttribute('viewBox', viewBox.join(' '));
         });
-    
+
         svgElement.addEventListener('mouseup', function () {
             isPanning = false;
         });
-    
+
         svgElement.addEventListener('mouseleave', function () {
             isPanning = false;
         });
-    
+
         svgElement.addEventListener('touchstart', handleTouchStart, { passive: false });
         svgElement.addEventListener('touchmove', handleTouchMove, { passive: false });
         svgElement.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
+
         document.getElementById('zoom-in').addEventListener('click', function () {
             zoom(svgElement.clientWidth / 2, svgElement.clientHeight / 2, 1 / zoomFactor);
         });
-    
+
         document.getElementById('zoom-out').addEventListener('click', function () {
             zoom(svgElement.clientWidth / 2, svgElement.clientHeight / 2, zoomFactor);
         });
-    
+
         function zoom(x, y, factor) {
             const [minX, minY, width, height] = viewBox;
             const mouseX = x / svgElement.clientWidth * width + minX;
             const mouseY = y / svgElement.clientHeight * height + minY;
-    
-            viewBox = [
-                mouseX - (mouseX - minX) * factor,
-                mouseY - (mouseY - minY) * factor,
-                width * factor,
-                height * factor
-            ];
-            svgElement.setAttribute('viewBox', viewBox.join(' '));
+
+            const newWidth = width * factor;
+            const newHeight = height * factor;
+
+            // Ensure the new width and height do not go below the minimum zoom values
+            if (newWidth >= minZoomWidth && newWidth <= maxZoomWidth && newHeight >= minZoomHeight && newHeight <= maxZoomHeight) {
+                viewBox = [
+                    mouseX - (mouseX - minX) * factor,
+                    mouseY - (mouseY - minY) * factor,
+                    newWidth,
+                    newHeight
+                ];
+                svgElement.setAttribute('viewBox', viewBox.join(' '));
+            }
         }
-    
+
         let lastTouchDistance = null;
-    
+
         function handleTouchStart(event) {
             if (event.touches.length === 2) {
                 lastTouchDistance = getDistance(event.touches[0], event.touches[1]);
@@ -214,12 +234,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 startY = event.touches[0].clientY;
             }
         }
-    
+
         function handleTouchMove(event) {
             event.preventDefault();
             if (event.touches.length === 2) {
                 const currentTouchDistance = getDistance(event.touches[0], event.touches[1]);
-                const zoomFactor = lastTouchDistance / currentTouchDistance;
+                const zoomFactor = 1 + (lastTouchDistance - currentTouchDistance) / initialViewBox[2];
                 const centerX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
                 const centerY = (event.touches[0].clientY + event.touches[1].clientY) / 2;
                 zoom(centerX, centerY, zoomFactor);
@@ -234,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 svgElement.setAttribute('viewBox', viewBox.join(' '));
             }
         }
-    
+
         function handleTouchEnd(event) {
             if (event.touches.length < 2) {
                 lastTouchDistance = null;
@@ -243,12 +263,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 isPanning = false;
             }
         }
-    
+
         function getDistance(touch1, touch2) {
             return Math.sqrt(Math.pow(touch2.clientX - touch1.clientX, 2) + Math.pow(touch2.clientY - touch1.clientY, 2));
         }
     }
-    
+
     let currentTheme = 'dark'; // Tema inicial
 
     // Função para alternar entre os temas
