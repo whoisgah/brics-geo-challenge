@@ -1,4 +1,4 @@
-# brics geo challenge
+# BRICS GEO CHALLENGE
  
 # Jogo de Mapa Interativo
 
