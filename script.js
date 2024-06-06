@@ -56,7 +56,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function onCountryClick(event) {
         const selectedCountry = event.target.id; // ou event.target.getAttribute('id');
-
+        // Verifica se o país está na lista de países válidos
+        if (!countries.includes(selectedCountry)) {
+            return;
+        }
         // Verifica se o país já foi clicado antes
         if (!clickedCountries.includes(selectedCountry)) {
             // Adiciona o país à lista de países clicados
